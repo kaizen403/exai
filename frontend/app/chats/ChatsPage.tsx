@@ -90,6 +90,8 @@ export default function ChatsPage() {
           <div className="absolute inset-0 bg-gray-900 bg-opacity-80 z-10 flex items-center justify-center">
             <p className="text-xl font-semibold">
               Indexing chat data… please wait.
+              <br />
+              might take few mins for long chats
             </p>
           </div>
         )}
