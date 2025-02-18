@@ -118,10 +118,10 @@ export default function UploadChat() {
             Exai
           </h1>
           <p className="mt-2 text-lg md:text-xl italic text-gray-400">
-            Bring memories back to life
+            turns memories into new beginnings—chat again like never before.
           </p>
           <p className="mt-2 text-sm text-gray-500">powered by deepseek.</p>
-          <p className="mt-1 font-semibold text-s text-gray-500">
+          <p className="mt-1 font-semibold text-xs text-gray-500">
             Your data is safe, stored in memory, and cleared when your session
             ends.
           </p>
