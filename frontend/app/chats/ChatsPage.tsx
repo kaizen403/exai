@@ -25,7 +25,7 @@ export default function ChatsPage() {
 
   useEffect(() => {
     if (!socket) {
-      socket = io("https://13.233.105.76/");
+      socket = io("https://8018-13-233-105-76.ngrok-free.app/");
       socket.on("connect", () => {
         console.log("Socket connected:", socket?.id);
         socket?.emit("joinSession", { sessionId });

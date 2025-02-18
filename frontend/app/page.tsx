@@ -63,11 +63,14 @@ export default function UploadChat() {
       console.log("Extracted txtContent length:", txtContent.length);
       console.log("First 100 characters:", txtContent.substring(0, 100));
       setUploadStatus("Uploading extracted text...");
-      const res = await fetch("https://13.233.105.76/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ txtContent, senderName: inferredName }),
-      });
+      const res = await fetch(
+        "https://8018-13-233-105-76.ngrok-free.app/upload",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ txtContent, senderName: inferredName }),
+        },
+      );
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Backend responded with error:", res.status, errorText);
