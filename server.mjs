@@ -1,4 +1,3 @@
-// server.mjs
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,11 +13,9 @@ import { HumanMessage } from "@langchain/core/messages";
 const app = express();
 app.use(cors());
 
-// Only use one JSON middleware with the increased limit
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Upload endpoint: expects { txtContent, senderName } in the body.
 app.post("/upload", (req, res) => {
   const { txtContent, senderName } = req.body;
   console.log("Received upload:");
@@ -133,7 +130,6 @@ io.on("connection", (socket) => {
             console.log(
               `Session ${roomId} terminated due to no active sockets.`,
             );
-            // Delete the session to free up resources
             delete sessions[roomId];
           }
         }

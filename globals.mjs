@@ -1,4 +1,3 @@
-// globals.mjs
 export const globals = {
   vectorStore: null,
   globalRetriever: {

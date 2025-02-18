@@ -1,4 +1,3 @@
-// nodes.mjs
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatGroq } from "@langchain/groq";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
@@ -6,9 +5,7 @@ import { parseChatLine, trimMessages } from "./utils.mjs";
 import pLimit from "p-limit";
 import pRetry from "p-retry";
 
-// ==========================
 // loadChatHistory
-// ==========================
 export async function loadChatHistory(state) {
   console.log("Node loadChatHistory: Entered node.");
   if (state.messages && state.messages.length > 0) {
@@ -84,12 +81,10 @@ export async function indexChats(state) {
   });
   state.vectorStore = new MemoryVectorStore(embeddings);
 
-  // Increase batch size to 10 to reduce number of calls
   const batchSize = 10;
   const totalBatches = Math.ceil(docs.length / batchSize);
   let completedBatches = 0;
 
-  // Process batches sequentially
   const concurrencyLimit = 1;
   const limit = pLimit(concurrencyLimit);
   const tasks = [];
@@ -114,7 +109,6 @@ export async function indexChats(state) {
       if (state.sessionId && global.io) {
         global.io.to(state.sessionId).emit("indexProgress", { progress });
       }
-      // Delay 2 seconds between batches to help with rate limiting
       await new Promise((resolve) => setTimeout(resolve, 2000));
     };
     tasks.push(
@@ -257,7 +251,6 @@ Answer:
   });
   console.log("Node generate: Final answer generated.");
 
-  // Use regex to remove any <think>...</think> content from the response.
   const cleanedContent = response.content.replace(
     /<think>[\s\S]*?<\/think>/gi,
     "",

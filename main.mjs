@@ -1,11 +1,9 @@
-// main.mjs
-import "dotenv/config.js"; // Loads environment variables from .env
+import "dotenv/config.js";
 import readline from "readline";
 import { HumanMessage } from "@langchain/core/messages";
 import { graph } from "./graph.mjs";
 
 async function main() {
-  // Initialize state with default keys.
   let state = { messages: [], docs: [], currentQuery: "" };
 
   state = await graph.invoke(state);
@@ -23,7 +21,6 @@ async function main() {
       rl.close();
       process.exit(0);
     }
-    // Save the latest query and add it to the conversation.
     state.currentQuery = line;
     state.messages.push(new HumanMessage({ content: line }));
 
