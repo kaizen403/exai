@@ -25,7 +25,7 @@ export default function ChatsPage() {
 
   useEffect(() => {
     if (!socket) {
-      socket = io("http://localhost:3001");
+      socket = io("http://http://13.233.105.76/");
       socket.on("connect", () => {
         console.log("Socket connected:", socket?.id);
         socket?.emit("joinSession", { sessionId });
