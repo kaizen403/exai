@@ -4,6 +4,7 @@ import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import JSZip from "jszip";
 import { ArrowRight, Info } from "lucide-react";
+import { FaGithub, FaRocket } from "react-icons/fa";
 
 export default function UploadChat() {
   const [file, setFile] = useState<File | null>(null);
@@ -20,6 +21,7 @@ export default function UploadChat() {
       ) {
         setFile(selectedFile);
         setUploadStatus("");
+        // Infer sender name from the file name (substring after last dash)
         const baseName = selectedFile.name.replace(/\.zip$/i, "").trim();
         const dashIndex = baseName.lastIndexOf("-");
         if (dashIndex !== -1 && dashIndex < baseName.length - 1) {
@@ -46,7 +48,6 @@ export default function UploadChat() {
       setUploadStatus("Processing ZIP file...");
       const arrayBuffer = await file.arrayBuffer();
       const zip = await JSZip.loadAsync(arrayBuffer);
-
       const txtFiles = Object.keys(zip.files).filter((name) =>
         name.endsWith("_chat.txt"),
       );
@@ -59,23 +60,19 @@ export default function UploadChat() {
         setUploadStatus("Error extracting text content.");
         return;
       }
-
       console.log("Extracted txtContent length:", txtContent.length);
       console.log("First 100 characters:", txtContent.substring(0, 100));
-
       setUploadStatus("Uploading extracted text...");
       const res = await fetch("https://13.233.105.76/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ txtContent, senderName: inferredName }),
       });
-
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Backend responded with error:", res.status, errorText);
         throw new Error(`Backend error ${res.status}: ${errorText}`);
       }
-
       const data = await res.json();
       const sessionId = data.sessionId;
       if (!sessionId) {
@@ -97,14 +94,47 @@ export default function UploadChat() {
 
   return (
     <div className="min-h-screen bg-black text-gray-200 flex flex-col items-center p-4 md:p-6 font-lexend">
+      {/* Navbar */}
+      <nav className="w-full max-w-4xl flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-3">
+          <FaRocket className="w-8 h-8 text-green-500" />
+          <span className="text-3xl font-bold">Exai</span>
+        </div>
+        <a
+          href="https://github.com/kaizen403/exai"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-1 text-gray-300 hover:text-gray-100"
+        >
+          <FaGithub className="w-6 h-6" />
+          <span className="text-lg">GitHub</span>
+        </a>
+      </nav>
+
       <div className="w-full max-w-4xl">
         {/* Heading Section */}
-        <header className="text-center mb-8">
+        <header className="text-center mb-4">
           <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-400 to-gray-200">
             Exai
           </h1>
           <p className="mt-2 text-lg md:text-xl italic text-gray-400">
-            bring memories back to life
+            Bring memories back to life
+          </p>
+          <p className="mt-2 text-sm text-gray-500">powered by deepseek.</p>
+          <p className="mt-1 font-semibold text-s text-gray-500">
+            Your data is safe, stored in memory, and cleared when your session
+            ends.
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
+            Code is open source at{" "}
+            <a
+              href="https://github.com/kaizen403/exai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-300"
+            >
+              github.com/kaizen403/exai
+            </a>
           </p>
         </header>
 
@@ -116,27 +146,11 @@ export default function UploadChat() {
           </div>
           <ol className="list-decimal list-inside space-y-2 text-sm md:text-base">
             <li>
-              <span className="font-medium">Export WhatsApp Chat:</span> Open
-              WhatsApp on your phone, go to the desired chat, tap{" "}
-              <span className="font-bold">More &gt; Export chat</span> (choose
-              without media), and select <span className="font-bold">ZIP</span>{" "}
-              as the file type.
+              Open WhatsApp, go to a chat, tap the chat menu, and select Export
+              chat (without media) as a ZIP file.
             </li>
-            <li>
-              Transfer the exported ZIP file to your computer using email, cloud
-              storage, or USB.
-            </li>
-            <li>
-              Click the <span className="font-bold">Choose file</span> button
-              below to select the ZIP file.
-            </li>
-            <li>
-              The sender name will be automatically inferred from the file name.
-            </li>
-            <li>
-              Click <span className="font-bold">Submit</span> to upload and
-              process the file.
-            </li>
+            <li>Click Choose file below to select the ZIP file.</li>
+            <li>Then click Submit to upload and process.</li>
           </ol>
         </div>
 
@@ -146,7 +160,7 @@ export default function UploadChat() {
             {/* File Input */}
             <div>
               <label className="block text-lg font-medium mb-2">
-                ZIP File (must contain <code>_chat.txt</code>)
+                Import chat (.zip file)
               </label>
               <input
                 type="file"
@@ -159,7 +173,7 @@ export default function UploadChat() {
             {/* Display Inferred Sender Name */}
             {inferredName && (
               <div className="text-center text-lg font-semibold text-gray-300">
-                You will now be talking to {inferredName} again : )
+                You will now be talking to {inferredName} again :)
               </div>
             )}
 
@@ -168,7 +182,7 @@ export default function UploadChat() {
               type="submit"
               className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 transition duration-300 font-medium"
             >
-              Submit <ArrowRight />
+              Chat <ArrowRight />
             </button>
 
             {uploadStatus && (
